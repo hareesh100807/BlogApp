@@ -1,0 +1,106 @@
+###Register User
+
+POST http://localhost:4060/auth/users
+Content-Type: application/json
+
+{
+    "firstName":"author2",
+    "lastname":"",
+    "email":"author21@mail.com",
+    "role":"AUTHOR",
+    "password":"author2",
+    "profileImageUrl":" "
+}
+
+
+### user login
+POST http://localhost:4060/auth/login
+Content-Type: application/json
+
+{
+    "email":"user1@mail.com",
+    "password":"user1"
+}
+### author login
+POST http://localhost:4060/auth/login
+Content-Type: application/json
+
+{
+    "email":"admin@mail",
+    "password":"admin"
+}
+
+### logout
+GET http://localhost:4060/auth/logout
+
+
+### read articles of all authoes
+ GET http://localhost:4060/user-api/article
+### add comments to n article
+ PUT http://localhost:4060/user-api/article
+ Content-Type: application/json
+
+ {
+    "articleId":"69b3d10e7ff4f44a8c1bd0f5",
+    "comment":"hello world"
+ }
+
+
+
+
+
+
+
+
+
+
+### author
+### create new author
+POST http://localhost:4060/author-api/article
+Content-Type: application/json
+
+{
+    "author":"69b3c6a97ff4f44a8c1bd0a7",
+    "title":"Article by author 2",
+    "category":"programming in java",
+    "content":"test article on programming in java"
+}
+
+### read own articles
+GET http://localhost:4060/author-api/article
+
+### update article
+PUT http://localhost:4060/author-api/article
+Content-Type: application/json
+
+{
+    "articleId":"69b3cb167ff4f44a8c1bd0e0",
+    "title":"Article by author 2",
+    "category":"programming in java",
+    "content":"test article on programming in java"
+}
+
+
+### delete or restore article by article id
+PATCH http://localhost:4060/author-api/article
+Content-Type: application/json
+
+{
+    "articleId":"69b3d10e7ff4f44a8c1bd0f5",
+    "isArticleActive":false
+}
+
+
+
+
+
+
+
+###change the password
+PUT http://localhost:4060/auth/password
+Content-Type: application/json
+
+{
+    "oldPass":"admin",
+    "newPass":"hinewadmin"
+}

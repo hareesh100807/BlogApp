@@ -1,0 +1,36 @@
+### Admin login
+POST http://localhost:4060/auth/login
+Content-Type: application/json
+
+{
+	"email": "admin@mail",
+	"password": "admin"
+}
+
+### Check current auth (confirms ADMIN token cookie)
+GET http://localhost:4060/auth/check-auth
+
+### Read all users and authors
+GET http://localhost:4060/admin-api/users
+
+### Block a user/author
+PATCH http://localhost:4060/admin-api/users/status
+Content-Type: application/json
+
+{
+	"userId": "PUT_USER_OR_AUTHOR_ID_HERE",
+	"isUserActive": false
+}
+
+### Activate a user/author
+PATCH http://localhost:4060/admin-api/users/status
+Content-Type: application/json
+
+{
+	"userId": "PUT_USER_OR_AUTHOR_ID_HERE",
+	"isUserActive": true
+}
+
+### Admin logout
+GET http://localhost:4060/auth/logout
+
