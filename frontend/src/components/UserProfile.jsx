@@ -22,13 +22,14 @@ function UserProfile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [articles, setArticles] = useState([]);
-
+  const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4060";
   useEffect(() => {
     const getArticles = async () => {
       setLoading(true);
       try {
         //read articles of all authors
-        let res=await axios.get("http://localhost:4060/user-api/article",{withCredentials:true})
+        let res=await axios.get(`${API_BASE_URL}/use-api/article`,{withCredentials:true})
         //update articles state
         if(res.status===200){
           setArticles(res.data.payload)

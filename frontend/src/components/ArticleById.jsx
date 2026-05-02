@@ -39,7 +39,8 @@ function ArticleByID() {
   const [article, setArticle] = useState(location.state || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const API_BASE_URL =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:4060";
   useEffect(() => {
     if (article) return;
 
@@ -47,7 +48,7 @@ function ArticleByID() {
       setLoading(true);
 
       try {
-        const res = await axios.get(`http://localhost:4060/user-api/article/${id}`, { withCredentials: true });
+        const res = await axios.get(`${API_BASE_URL}/user-api/article/${id}`, { withCredentials: true });
 
         setArticle(res.data.payload);
       } catch (err) {
@@ -77,7 +78,7 @@ function ArticleByID() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:4060/author-api/article`,
+        `${API_BASE_URL}/author-api/article`,
         { articleId: id, isArticleActive: newStatus },
         { withCredentials: true },
       );
@@ -118,12 +119,12 @@ function ArticleByID() {
       commentObj.articleId = article._id;
       commentObj.user = user._id;
       console.log("Sending comment:", commentObj);
-      
-      let res = await axios.put("http://localhost:4060/user-api/article", commentObj, { withCredentials: true });
-      
+
+      let res = await axios.put(`${API_BASE_URL}/user-api/article`, commentObj, { withCredentials: true });
+
       if (res.status === 200) {
         // Reload article to get updated comments
-        const updatedRes = await axios.get(`http://localhost:4060/user-api/article/${id}`, { withCredentials: true });
+        const updatedRes = await axios.get(`${API_BASE_URL}/user-api/article/${id}`, { withCredentials: true });
         setArticle(updatedRes.data.payload);
         
         // Reset form
