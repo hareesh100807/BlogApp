@@ -83,9 +83,21 @@ app.use((req,res,next)=>{
 
 //to handle errors
 app.use((err,req,res,next)=>{
-    // res.status().json({message:"Error Occured",error:err.message})
-    // console.log(err.name)
-    // console.log(err.code)
+    // ensure CORS headers are present on error responses for allowed origins
+    try{
+      const origin = req.headers.origin
+      if (origin) {
+        if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+          res.setHeader('Access-Control-Allow-Origin', origin)
+          res.setHeader('Access-Control-Allow-Credentials', 'true')
+          res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        }
+      }
+    }catch(e){
+      console.log('error setting CORS headers on failure response',e)
+    }
+
     console.log("error is :",err)
     if(err.name === 'ValidationError'){
         return res.status(400).json({message:"Error Occured",error:err.message})
