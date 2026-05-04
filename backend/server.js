@@ -22,6 +22,9 @@ const allowedOrigins = rawFrontends
   .map((u) => u.trim().replace(/\/$/, ''))
   .filter(Boolean)
 
+// Log resolved allowed origins for easier debugging in deployment logs
+console.log('Resolved FRONTEND origins for CORS:', allowedOrigins.length ? allowedOrigins.join(', ') : '<<NONE - allowing all origins (unsafe for production)>>')
+
 app.use(
   cors({
     origin: function (origin, callback) {
