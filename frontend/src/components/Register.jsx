@@ -15,7 +15,7 @@ import { NavLink ,useNavigate} from "react-router";
 import { useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4060";
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
 
 function Register() {

@@ -39,8 +39,7 @@ function ArticleByID() {
   const [article, setArticle] = useState(location.state || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const API_BASE_URL =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:4060";
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL ?? "";
   useEffect(() => {
     if (article) return;
 

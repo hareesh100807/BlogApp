@@ -38,7 +38,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/auth": {
-        target: "http://localhost:4060",
+        target: process.env.BACKEND_URL || "http://localhost:4060",
         changeOrigin: true,
         secure: false,
       },

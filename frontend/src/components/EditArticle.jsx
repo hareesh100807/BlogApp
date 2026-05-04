@@ -15,7 +15,7 @@ import {
   pageWrapper,
 } from "../styles/common";
 
-const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL || "http://localhost:4060";
+const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL ?? "";
 
 function EditArticle() {
   const location = useLocation();

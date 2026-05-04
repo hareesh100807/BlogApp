@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { useAuth } from "../store/authStore";
 
-const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL || "http://localhost:4060";
+const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL ?? "";
 
 import {
   articleCardClass,
