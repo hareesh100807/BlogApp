@@ -14,57 +14,43 @@ config()
 
 //body passer middleware
 app.use(exp.json())
-const cors = require("cors");
 
 // CORS: allow multiple origins via FRONTEND_URLS or single FRONTEND_URL
-const rawFrontends =
-  process.env.FRONTEND_URLS || process.env.FRONTEND_URL || "";
-
+const rawFrontends = process.env.FRONTEND_URLS || process.env.FRONTEND_URL || ''
 const allowedOrigins = rawFrontends
-  .split(",")
-  .map((u) => u.trim().replace(/\/$/, "")) // remove trailing slash
-  .filter(Boolean);
+  .split(',')
+  .map((u) => u.trim().replace(/\/$/, ''))
+  .filter(Boolean)
 
-// Debug log (very useful in Render logs)
-console.log(
-  "Resolved FRONTEND origins for CORS:",
-  allowedOrigins.length
-    ? allowedOrigins.join(", ")
-    : "<<NONE - allowing all origins (unsafe for production)>>"
-);
+// Log resolved allowed origins for easier debugging in deployment logs
+console.log('Resolved FRONTEND origins for CORS:', allowedOrigins.length ? allowedOrigins.join(', ') : '<<NONE - allowing all origins (unsafe for production)>>')
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow non-browser requests (Postman, curl, mobile apps)
-      if (!origin) return callback(null, true);
+// Custom CORS middleware: set headers for allowed origins and handle preflight
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
 
-      // if no env configured → allow all (fallback)
-      if (allowedOrigins.length === 0) {
-        return callback(null, true);
-      }
+  // allow non-browser requests (curl/postman) without Origin header
+  if (!origin) return next();
 
-      // normalize incoming origin (remove trailing slash just in case)
-      const normalizedOrigin = origin.replace(/\/$/, "");
+  // allow all if no whitelist set (useful for testing) or origin is whitelisted
+  if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
 
-      if (allowedOrigins.includes(normalizedOrigin)) {
-        return callback(null, true);
-      }
+    if (req.method === 'OPTIONS') {
+      // preflight
+      return res.sendStatus(204);
+    }
 
-      console.error("❌ CORS blocked for:", origin);
-      return callback(new Error("CORS not allowed for origin: " + origin));
-    },
+    return next();
+  }
 
-    credentials: true,
+  // Origin not allowed
+  return res.status(403).json({ message: 'CORS not allowed for origin: ' + origin });
+})
 
-    // ✅ IMPORTANT: explicitly allow headers & methods
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-// ✅ Handle preflight requests explicitly
-app.options("*", cors());
 //cookie parser
 app.use(cookieParser())
 
