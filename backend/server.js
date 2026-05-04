@@ -14,10 +14,35 @@ config()
 
 //body passer middleware
 app.use(exp.json())
-app.use(cors({
-    origin: process.env.FRONTEND_URL?.replace(/\/$/, ''),
-    credentials: true
-}))
+
+// CORS: allow multiple origins via FRONTEND_URLS or single FRONTEND_URL
+const rawFrontends = process.env.FRONTEND_URLS || process.env.FRONTEND_URL || ''
+const allowedOrigins = rawFrontends
+  .split(',')
+  .map((u) => u.trim().replace(/\/$/, ''))
+  .filter(Boolean)
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow non-browser requests like curl/postman
+      if (!origin) return callback(null, true)
+
+      if (allowedOrigins.length === 0) {
+        // no whitelist configured — allow the requesting origin
+        return callback(null, true)
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true)
+      }
+
+      // otherwise block
+      return callback(new Error('CORS not allowed for origin: ' + origin))
+    },
+    credentials: true,
+  })
+)
 
 //cookie parser
 app.use(cookieParser())
