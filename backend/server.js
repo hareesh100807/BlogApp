@@ -14,39 +14,57 @@ config()
 
 //body passer middleware
 app.use(exp.json())
+const cors = require("cors");
 
 // CORS: allow multiple origins via FRONTEND_URLS or single FRONTEND_URL
-const rawFrontends = process.env.FRONTEND_URLS || process.env.FRONTEND_URL || ''
-const allowedOrigins = rawFrontends
-  .split(',')
-  .map((u) => u.trim().replace(/\/$/, ''))
-  .filter(Boolean)
+const rawFrontends =
+  process.env.FRONTEND_URLS || process.env.FRONTEND_URL || "";
 
-// Log resolved allowed origins for easier debugging in deployment logs
-console.log('Resolved FRONTEND origins for CORS:', allowedOrigins.length ? allowedOrigins.join(', ') : '<<NONE - allowing all origins (unsafe for production)>>')
+const allowedOrigins = rawFrontends
+  .split(",")
+  .map((u) => u.trim().replace(/\/$/, "")) // remove trailing slash
+  .filter(Boolean);
+
+// Debug log (very useful in Render logs)
+console.log(
+  "Resolved FRONTEND origins for CORS:",
+  allowedOrigins.length
+    ? allowedOrigins.join(", ")
+    : "<<NONE - allowing all origins (unsafe for production)>>"
+);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow non-browser requests like curl/postman
-      if (!origin) return callback(null, true)
+      // allow non-browser requests (Postman, curl, mobile apps)
+      if (!origin) return callback(null, true);
 
+      // if no env configured → allow all (fallback)
       if (allowedOrigins.length === 0) {
-        // no whitelist configured — allow the requesting origin
-        return callback(null, true)
+        return callback(null, true);
       }
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true)
+      // normalize incoming origin (remove trailing slash just in case)
+      const normalizedOrigin = origin.replace(/\/$/, "");
+
+      if (allowedOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
       }
 
-      // otherwise block
-      return callback(new Error('CORS not allowed for origin: ' + origin))
+      console.error("❌ CORS blocked for:", origin);
+      return callback(new Error("CORS not allowed for origin: " + origin));
     },
-    credentials: true,
-  })
-)
 
+    credentials: true,
+
+    // ✅ IMPORTANT: explicitly allow headers & methods
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// ✅ Handle preflight requests explicitly
+app.options("*", cors());
 //cookie parser
 app.use(cookieParser())
 
