@@ -23,19 +23,19 @@ function UserProfile() {
   const [error, setError] = useState(null);
   const [articles, setArticles] = useState([]);
   const API_BASE_URL =
-  import.meta.env.VITE_API_URL ?? "";
+  import.meta.env.VITE_API_URL ?? import.meta.env.VITE_BACKEND_URL ?? "";
   useEffect(() => {
     const getArticles = async () => {
       setLoading(true);
       try {
         //read articles of all authors
-        let res=await axios.get(`${API_BASE_URL}/use-api/article`,{withCredentials:true})
+        let res=await axios.get(`${API_BASE_URL}/user-api/article`,{withCredentials:true})
         //update articles state
         if(res.status===200){
           setArticles(res.data.payload)
         }
       } catch (err) {
-        setError(err.response?.data?.error || "Something went wrong");
+        setError(err.response?.data?.message || err.response?.data?.error || err.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -72,7 +72,7 @@ function UserProfile() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
       {/* ERROR */}
-      {error && <p className={errorClass}>{error}</p>}
+      {error && <p className={errorClass}>{String(error)}</p>}
 
       {/* PROFILE HEADER */}
       <div className="bg-white border border-[#e8e8ed] rounded-3xl p-6 mb-8 shadow-sm flex items-center justify-between">

@@ -39,7 +39,7 @@ function ArticleByID() {
   const [article, setArticle] = useState(location.state || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL ?? "";
+  const API_BASE_URL = import.meta.env.VITE_API_URL ?? import.meta.env.VITE_BACKEND_URL ?? "";
   useEffect(() => {
     if (article) return;
 
@@ -51,7 +51,7 @@ function ArticleByID() {
 
         setArticle(res.data.payload);
       } catch (err) {
-        setError(err.response?.data?.error);
+        setError(err.response?.data?.message || err.response?.data?.error || err.message || err);
       } finally {
         setLoading(false);
       }

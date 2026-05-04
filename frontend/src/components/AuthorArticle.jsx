@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { useAuth } from "../store/authStore";
 
-const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL ?? "";
+const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL ?? import.meta.env.VITE_API_URL ?? import.meta.env.VITE_BACKEND_URL ?? "";
 
 import {
   articleCardClass,
@@ -73,7 +73,7 @@ function AuthorArticles() {
   };
 
   if (loading) return <p className={loadingClass}>Loading articles...</p>;
-  if (error) return <p className={errorClass}>{error}</p>;
+  if (error) return <p className={errorClass}>{String(error)}</p>;
 
   if (articles.length === 0) {
     return (

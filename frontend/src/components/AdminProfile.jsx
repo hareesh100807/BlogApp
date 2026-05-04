@@ -90,7 +90,7 @@ function AdminProfile() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
-      {error && <p className={`${errorClass} mb-4`}>{error}</p>}
+      {error && <p className={`${errorClass} mb-4`}>{String(error)}</p>}
       {message && <p className={`${successClass} mb-4`}>{message}</p>}
 
       <div className="bg-white border border-[#e8e8ed] rounded-3xl p-6 mb-8 shadow-sm flex items-center justify-between">

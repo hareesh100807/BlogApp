@@ -60,7 +60,7 @@ function Login() {
         <h2 className={formTitle}>Sign In</h2>
 
         {/* API error */}
-        {error && <p className={errorClass}>{error}</p>}
+        {error && <p className={errorClass}>{String(error)}</p>}
 
         <form onSubmit={handleSubmit(onUserLogin)}>
           {/* Email */}

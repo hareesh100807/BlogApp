@@ -15,7 +15,7 @@ import {
   pageWrapper,
 } from "../styles/common";
 
-const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL ?? "";
+const ARTICLE_API_BASE_URL = import.meta.env.VITE_ARTICLE_API_URL ?? import.meta.env.VITE_API_URL ?? import.meta.env.VITE_BACKEND_URL ?? "";
 
 function EditArticle() {
   const location = useLocation();

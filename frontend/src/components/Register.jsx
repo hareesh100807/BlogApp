@@ -15,7 +15,7 @@ import { NavLink ,useNavigate} from "react-router";
 import { useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? import.meta.env.VITE_BACKEND_URL ?? "";
 
 
 function Register() {
@@ -56,7 +56,7 @@ function Register() {
 
     } catch (err) {
       console.log("err in registration", err);
-      setApiError(err.response?.data?.error || "Registration failed");
+      setApiError(err.response?.data?.message || err.response?.data?.error || err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,7 @@ function Register() {
         <h2 className={formTitle}>Create an Account</h2>
 
         {/* API Error */}
-        {apiError && <p className={errorClass}>{apiError}</p>}
+        {apiError && <p className={errorClass}>{String(apiError)}</p>}
 
         <form onSubmit={handleSubmit(onUserRegister)}>
           {/* ROLE */}
