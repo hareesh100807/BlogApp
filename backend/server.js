@@ -77,13 +77,6 @@ const connectDB = async()=>{
 }
 connectDB()
 
-app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'API running' });
-});
-
-app.get('/healthz', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
 
 //to handle invalid path
 
