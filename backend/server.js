@@ -65,18 +65,43 @@ app.use('/author-api',authorApp);
 app.use('/admin-api',adminApp);
 app.use('/auth',commonApp)
 
-const connectDB = async()=>{
-    try{
-        await connect(process.env.DB_URL)
-        console.log("DB server is connected")
-        const port = process.env.PORT || 5000
-        app.listen(port,()=>console.log(`Server listining on ${port}...`))
-    }catch(err){
-        console.log("unable to connect",err)
+const connectDB = async () => {
+  try {
+    if (!process.env.DB_URL) {
+      console.warn('DB_URL not set; skipping DB connection attempt.');
+      return false;
     }
-}
-connectDB()
 
+    await connect(process.env.DB_URL);
+    console.log('DB server is connected');
+    return true;
+  } catch (err) {
+    console.error('Unable to connect to DB:', err && err.message ? err.message : err);
+    return false;
+  }
+};
+
+const startServer = () => {
+  const port = process.env.PORT || 5000;
+  app.listen(port, () => console.log(`Server listening on ${port}...`));
+};
+
+(async () => {
+  const dbConnected = await connectDB();
+  console.log('DB connected:', dbConnected);
+  startServer();
+})();
+
+// Process-level handlers for clearer logs
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+  // Optional: exit process for critical errors
+  // process.exit(1);
+});
 
 //to handle invalid path
 
