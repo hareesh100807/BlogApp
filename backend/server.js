@@ -25,6 +25,12 @@ const allowedOrigins = rawFrontends
 // Log resolved allowed origins for easier debugging in deployment logs
 console.log('Resolved FRONTEND origins for CORS:', allowedOrigins.length ? allowedOrigins.join(', ') : '<<NONE - allowing all origins (unsafe for production)>>')
 
+// Diagnostic endpoint to inspect CORS behavior after deploy
+app.get('/cors-check', (req, res) => {
+  const origin = req.headers.origin || null
+  res.json({ origin, allowedOrigins })
+})
+
 // Custom CORS middleware: set headers for allowed origins and handle preflight
 app.use((req, res, next) => {
   const origin = req.headers.origin;
