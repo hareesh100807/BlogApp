@@ -30,7 +30,3 @@ export const verifyToken=(...allowedRole)=>{
     }
 }
 
-// export const verifyToken = async(req,resizeBy,next)=>{
-   
-
-// }
